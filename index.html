@@ -1,0 +1,38 @@
+<html>
+
+<head>
+
+    <title>
+    </title>
+    <script type="text/javascript" src="index.php?type=test"></script>
+    <script>
+        function submit()
+        {
+            document.getElementById("submit").onclick = function () {
+            };
+        };
+    </script>
+</head>
+
+
+<body>
+<form method="get" action="index.php" target="_blank">
+    <input type="radio" name="type" value="lianjia_new">链家新房
+    <br>
+    <input type="radio" name="type" value="ygjy_infos" checked="checked">阳光家缘项目表
+    <br>
+    <input type="submit", value="确定">
+</form>
+<br>
+
+<br>
+<h3>Sql 查询</h3>
+<form method="get" action="index.php" target="_blank">
+    <input type="text" name="sql" size="100">
+    <br>
+    <input type="submit", value="查询">
+</form>
+
+
+</body>
+</html>

@@ -112,4 +112,41 @@ class MarketLianjia extends MarketData
             return $data;
         }
     }
+
+    public function printf($datas)
+    {
+        $this->arrayToform($datas);
+    }
+
+    private function arrayToform($arr){
+        //使用array()语句结构将联系人列表中所有数据声明为一个二维数组,默认下标是顺序数字索引
+        //以HTML表格的形式输出二维数组中的每个元素
+        echo '<table border="1" width="1440" align="center" >';
+        echo '<caption><h1>链家新房列表</h1></caption>';
+        echo '<tr bgcolor="#dddddd">';
+        echo '<th>id</th><th>name</th><th>addr</th><th>area</th><th>other</th><th>type</th><th>average</th><th>url</th>';
+        echo '</tr>';
+        //使用双层for语句嵌套二维数组$contact1,以HTML表格的形式输出
+        //使用外层循环遍历数组$contact1中的行
+        $id = 0;
+        foreach ($arr as $k => $item){
+            echo '<tr>';
+            $host = "http://gz.fang.lianjia.com";
+            //使用内层循环遍历数组$contact1 中 子数组的每个元素,使用count()函数控制循环次数
+            foreach ($item as $kk => $row)
+            {
+                if ($kk == 'url') {
+                    $t = '<a href="'.$host.$row.'" target="_blank">跳转</a>';
+                    echo '<td>' . ++$id . '</td>';
+                }elseif ($kk == 'average'){
+                    echo '<td>'.$row.'</td>';
+                    echo '<td>'.$t.'</td>';
+                }else{
+                    echo '<td>'.$row.'</td>';
+                }
+            }
+            echo '</tr>';
+        }
+        echo '</table>';
+    }
 }

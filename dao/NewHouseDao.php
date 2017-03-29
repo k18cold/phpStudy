@@ -9,17 +9,17 @@
 
 include("DaoManager.php");
 include "DaoInterface.php";
-class NewHouseDaoManager implements DaoInterface
+class NewHouseDao implements DaoInterface
 {
     public function countItemsByName($con,$name)
     {
-        $query_result = DaoManager::handle_sql($con, "SELECT * FROM ".$this->getTableName()." WHERE name = '$name'");
+        $query_result = DaoManager::handle_sql($con, "SELECT * FROM ".$this->getTableName()." WHERE url = '$name'");
         return mysqli_num_rows($query_result);
     }
 
     public function updateItemByName($con,$name, $item)
     {
-        $query_result =  DaoManager::handle_sql($con, "SELECT * FROM ".$this->getTableName()." WHERE name = '$name'");
+        $query_result =  DaoManager::handle_sql($con, "SELECT * FROM ".$this->getTableName()." WHERE url = '$name'");
         $rd = mysqli_fetch_row($query_result);
         if ($rd[2] == $item['addr'] && $rd[3] == $item['area'] && $rd[4] == $item['other'] && $rd[5] == $item['type'] && $rd[6] == $item['average'] && $rd[7] == $item['url']) {
             //不做任何处理
@@ -65,6 +65,6 @@ class NewHouseDaoManager implements DaoInterface
 
     function getTableName()
     {
-       return  "secend_hand";
+       return  "lianjia_new";
     }
 }

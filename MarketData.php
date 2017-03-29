@@ -101,4 +101,6 @@ abstract class MarketData
     abstract function convertToUtf8($content);
 
     abstract function parseToList($content);
+
+    abstract function printf($datas);
 }

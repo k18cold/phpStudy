@@ -166,4 +166,9 @@ class MarketYGJY extends MarketData
         $content = $this->getContent('http://housing.gzcc.gov.cn/search/project/project_detail.jsp?changeproInfoTag=1&changeSellFormtag=1&pjID=100000013209&name=fdcxmxx');
         var_export($content);
     }
+
+    function printf($datas)
+    {
+        // TODO: Implement printf() method.
+    }
 }
