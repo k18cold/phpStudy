@@ -57,7 +57,7 @@ class MarketLianjia extends MarketData
     function test()
     {
         $url = 'http://gz.fang.lianjia.com/loupan/';
-        $content = $this->getContent($url);
+        $content = $this->getContent($url,"");
         $content = $this->cut($content, '<div class="page-box house-lst-page-box"', '</div>');
         $regex = $this->cut($content, 'page-url="', '"');
         $total = $this->cut($content, '"totalPage":', ',"curPage');
@@ -97,7 +97,7 @@ class MarketLianjia extends MarketData
             do {
                 $u = $url_host . $page;
                 echo $u . "\n";
-                $content = self::getContent($u);
+                $content = self::getContent($u,"");
                 $d = self::parseToList($content);
                 $data = array_merge($data, $d);
 
@@ -133,8 +133,10 @@ class MarketLianjia extends MarketData
             echo '<tr>';
             $host = "http://gz.fang.lianjia.com";
             //使用内层循环遍历数组$contact1 中 子数组的每个元素,使用count()函数控制循环次数
+            $t = '';
             foreach ($item as $kk => $row)
             {
+
                 if ($kk == 'url') {
                     $t = '<a href="'.$host.$row.'" target="_blank">跳转</a>';
                     echo '<td>' . ++$id . '</td>';

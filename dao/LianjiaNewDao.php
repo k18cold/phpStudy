@@ -7,9 +7,9 @@
  * Time: 10:21
  */
 
-include("DaoManager.php");
-include "DaoInterface.php";
-class NewHouseDao implements DaoInterface
+include_once("DaoManager.php");
+include_once "DaoInterface.php";
+class LianjiaNewDao implements DaoInterface
 {
     public function countItemsByName($con,$name)
     {
@@ -47,20 +47,22 @@ class NewHouseDao implements DaoInterface
         $create_time = time();
         $update_time = time();
         $result = "INSERT INTO ".$this->getTableName()."(name, addr, area, tag, type, average, url, create_time, update_time) VALUES('$arr[name]','$arr[addr]','$arr[area]','$arr[other]','$arr[type]','$arr[average]','$arr[url]', '$create_time', '$update_time')";
-//    echo $result;
         return $result;
     }
 
-    function update_sql($arr)
+    function update_sql($item)
     {
         $update_time = time();
-        $result = "UPDATE ".$this->getTableName()." set update_time=$update_time where name='$arr[name]'";
+        $result = "UPDATE ".$this->getTableName()." set 
+        name='".$item['name']
+            ."',addr='".$item['addr']
+            ."',area='".$item['area']
+            ."',tag='".$item['tag']
+            ."',type='".$item['type']
+            ."',average='".$item['average']
+            ."'',update_time='".$update_time
+            ."' where url='$item[url]'";
         return $result;
-    }
-
-    function select_sql_name($name)
-    {
-        $result = "Select * from ".$this->getTableName()." Where name = '$name'";
     }
 
     function getTableName()

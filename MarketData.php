@@ -38,16 +38,39 @@ abstract class MarketData
         return $result;
     }
 
-    public function url_get($url)
+    public function url_request($url, $fields)
     {
         $con = curl_init();
-        curl_setopt($con, CURLOPT_URL, $url);
-        curl_setopt($con, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($con, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36');
-        $tem = curl_exec($con);
-        curl_close($con);
-        return $tem;
+        if (empty($fields)) {
+            curl_setopt($con, CURLOPT_URL, $url);
+            curl_setopt($con, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($con, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36');
+        }else {
+            curl_setopt($con, CURLOPT_POSTFIELDS, $fields);
+        }
+            $tem = curl_exec($con);
+            $code = curl_getinfo($con,CURLINFO_HTTP_CODE);
+            curl_close($con);
+            return array('code'=>$code, 'content'=>$tem);
     }
+
+    function send_post($url, $post_data) {
+
+        $postdata = http_build_query($post_data);
+        $options = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => 'Content-type:application/x-www-form-urlencoded',
+                'content' => $postdata,
+                'timeout' => 15 * 60 // 超时时间（单位:s）
+            )
+        );
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+
+        return $result;
+    }
+
     public function cut($str, $start, $end)
     {
         $temp = $str;
@@ -60,14 +83,14 @@ abstract class MarketData
         return $temp;
     }
 
-    public function rcut($str, $end, $start)
+    public static function rcut($str, $end, $start)
     {
         $index_end = strpos($str, $end);
         $index_start = strrpos(substr($str, 0, $index_end), $start) + strlen($start);
         return substr($str, $index_start, $index_end - $index_start);
     }
 
-    public function contains($str, $t)
+    public static function contains($str, $t)
     {
         if (!strpos($str, $t) === false) {
             return true;
@@ -76,24 +99,32 @@ abstract class MarketData
         }
     }
 
-    function getContent($url)
+    function getContent($url, $fields)
     {
         if (!file_exists($this->m_path)){
             self::createDir($this->m_path);
         }
-        $file_temp = $this->getFileTemp($url);
+        $file_temp = $this->getFileTemp($url, $fields);
         if (file_exists($file_temp)) {
             $result = file_get_contents($file_temp);
         } else {
             echo 'downloading:'.$url."\n";
-            $result = self::url_get($url);
-            file_put_contents($file_temp, $this->convertToUtf8($result));
+            $rResult = self::url_request($url, $fields);
+            if ($rResult['code'] != 400){
+                $result = "";
+            }else{
+                $result = $rResult['content'];
+                file_put_contents($file_temp, $this->convertToUtf8($result));
+            }
         }
         return $result;
     }
 
-    function getFileTemp($url){
-        return $this->m_path.'/'.md5($url).'.cache';
+    function getFileTemp($url, $fields){
+        $f = empty($fields) ? '': array_keys($fields);
+//        echo $this->m_path.md5($url.$f).'.cache';
+//        echo "\n";
+        return $this->m_path.md5($url.$f).'.cache';
     }
 
     abstract function getAllData();
