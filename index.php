@@ -16,10 +16,7 @@ function ygjy_infos()
 {
     $market = new MarketYGJY(MarketYGJY::getTempPath());
     $datas = $market->getAllData();
-//    $datas = $market->getAllData();
-//    insertIntoDb($datas, new DaoManager(new YgjyInfosDao()));
-//    saveDatasToDbForYgjy($datas);
-//    var_export($datas);
+    saveDatasToDbForYgjy($datas);
     $market->printf($datas);
 }
 
@@ -33,7 +30,11 @@ function saveDatasToDbForYgjy($datas)
     $sCount = 0;
     $fCount = 0;
     foreach ($datas as $k => $value) {
-        if ($db->data($value)->add() == 1) {
+        $a = array();
+        foreach ($value as $ak => $av){
+            $a[$ak] = '"'.str_replace('"',"'",$av).'"';
+        }
+        if ($db->data($a)->add() == 1) {
             $sCount++;
         } else {
             $fCount++;

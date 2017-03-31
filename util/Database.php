@@ -418,11 +418,7 @@ class Database{
             array_push($fields,'('.implode(',',array_keys($data)).')');
         }
         $this->data['fields'] = $fields[0];
-        $vastr = implode(',',$values);
-        $vastr = str_replace('(', '"', $vastr);
-        $vastr = str_replace(')','"', $vastr);
-        $vastr = str_replace(',','","',Utils::trim($vastr));
-        $this->data['values'] = '('.$vastr.')';
+        $this->data['values'] = implode(',',$values);
         return $this;
     }
     /*
@@ -434,7 +430,7 @@ class Database{
         $fields = $this->data['fields'];
         $values = $this->data['values'];
         $sql = 'INSERT INTO '.$this->_table.$fields.'VALUES'.$values;
-//        echo $sql;
+//        echo "\n".$sql."\n";
         $res = mysqli_query($this->_dbObj,$sql);
         return $res;
     }
